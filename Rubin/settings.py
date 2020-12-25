@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'i#dpuihmo!9d*k!^u@4(%nipvc4*q=rtj+e4$jx&q#q5l+2j(u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://stormy-thicket-61810.herokuapp.com/']
 
 
 # Application definition
