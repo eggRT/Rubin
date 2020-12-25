@@ -4,9 +4,13 @@
 <h1>Posts</h1>
 <ul>
 	{% for post in object_list %}
-	{{ post.title }} - {{ post.author }}<br/>
-	{{ post.textPost }}
-	<br/><br/>
+	<h3>{{ post.title }}</h3>
+	{{ post.textPost }}<br/>
+	{% if post.imagePost %}
+	<img src="{{ post.imagePost.url }}" width="350" height="250">
+	{% endif %}<br/><hr>
+	{{ post.author }} - <small>{{ post.date }}</small>
+	<br/><br/><br/><br/>
 	{% endfor %}
 </ul>
 {% endblock %}
