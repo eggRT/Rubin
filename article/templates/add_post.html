@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h1>Create post</h1>
+
+<div class="form-group">
+<form method="POST" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.media }}
+	{{ form.as_p }}
+	<button class="btn btn-outline-secondary">Published</button>
+</div>
+	
+	<script>
+		var name = "{{ user.id }}"
+		document.getElementById("nikc").value = name;
+	</script>
+
+
+{% else %}
+<h3>You are not authenticated</h3>
+{% endif %}
+
+{% endblock %}

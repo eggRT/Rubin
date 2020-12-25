@@ -7,8 +7,9 @@
 	<h3>{{ post.title }}</h3>
 	{{ post.textPost }}<br/>
 	{% if post.imagePost %}
-	<img src="{{ post.imagePost.url }}" width="350" height="250">
-	{% endif %}<br/><hr>
+	<img src="{{ post.imagePost.url }}" width="300" height="200">
+	<br/>
+	{% endif %}<hr>
 	{{ post.author }} - <small>{{ post.date }}</small>
 	<br/><br/><br/><br/>
 	{% endfor %}
