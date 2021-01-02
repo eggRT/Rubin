@@ -1,0 +1,51 @@
+{% extends 'base.html ' %}
+{% load static %}
+
+{% block title %}
+{{ post.title }}
+{% endblock %}
+{% block content %}
+<h1>{{ post.title }}</h1>
+<br/>
+<h5>{{ post.textPost }}</h5>
+<br/>
+{% if post.imagePost %}
+<img src="{{ post.imagePost.url }}">
+{% endif %}
+<hr>
+<small>	By: {{ post.author}} <br/>
+		Date: {{ post.date }}	<br/>
+</small>
+<br/>
+
+<h5>Comments</h5>
+{% if not comments %}
+...
+{% else %}
+{% for comment in comments %}
+{% if comment.user.profile.id %}
+<strong>
+  <img src="{{ comment.user.profile.profilePic.url }}" class="rounded-circle" width = "35" height="35">
+  &nbsp<a href="{% url 'profile_page' comment.user.profile.id comment.user.id %}", class="text-secondary text-decoration-none">{{ comment.user }}</a>&nbsp
+  <small class="fw-lighter">{{ comment.datepublished }}</small>
+  {% endif %}
+</strong>
+<br/>
+<h5>{{ comment.content }}</h5>
+<br/>
+{% endfor %}
+{% endif%}
+<br/>
+{% if user.is_authenticated %}
+{% if user.profile.id %}
+<form method="POST">
+	{% csrf_token %}
+	{{ comment_form.as_p }}
+	<input type="submit" name="Submit" class="btn btn-outline-secondary">
+</form>
+{% endif %}
+{% endif %}
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+{% endblock %}

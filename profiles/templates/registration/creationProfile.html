@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Profile
+{% endblock%}
+
+{% block content %}
+<h1>Profile</h1>
+
+<div class="form-group">
+<form method="POST" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button class="btn btn-outline-secondary">create</button>
+</div>
+
+	<script>
+		var name = "{{ user.id }}";
+		document.getElementById("elder").value = name;
+	</script>
+	
+{% endblock %}

@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -5,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <!-- Bootstrap CSS-->    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
@@ -32,6 +33,15 @@
         {% if user.is_authenticated %}
          <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a>
+        </li>
+        <li class="nav-item">
+          {% if user.profile.id %}
+          <a class="nav-link" href="{% url 'profile_page' user.profile.id user.id %}">Profile</a>
+
+          {% else %}
+          <a class="nav-link" href="{% url 'creationpr' %}">Profile</a>
+          {% endif %}
+
         </li>
         {% else %}
         <li class="nav-item">

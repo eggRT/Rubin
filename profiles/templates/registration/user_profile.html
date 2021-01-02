@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Profile</h1>
+
+<br/>
+
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+
+	{% if page_user.profilePic %}
+      <img src="{{ page_user.profilePic.url }}" width="100" height="130">
+  	{% else %}
+  		<img src="{% static 'testBlog/images/default_user_img.png' %}" width="100" height="100">
+	{% endif %}
+
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{ page_user.user }}</h5>
+
+        <p class="card-text">{{ page_user.descript }}</p>
+
+        {% if page_user.link %}
+        <p class="small text-muted">
+          <a href="{{ page_user.link }}">link</a>
+        </p>
+        {% endif %}
+        
+        {% if user.is_authenticated %}
+        {% if user.id == page_user.user.id %}
+        <a href="{% url 'editpr' user.profile.id %}">Edit</a>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<br/><br/><br/><br/>
+<h1>Posts</h1>
+<br/>
+<ul>
+  {% for blogpost in postik %}
+  {% if user.is_authenticated %}
+  {% if user.id == blogpost.author.id %}
+  <div class="d-flex bd-highlight">
+  <h3 class="flex-grow-1">{{ blogpost.title }}</h3>
+  <a href="{% url 'editPost' blogpost.pk %}", class="p-2 bd-highlight text-dark text-decoration-none" >Edit</a>
+  </div> 
+  {% else %}
+  <h3>{{ blogpost.title }}</h3>
+  {% endif %}
+  {% else %}
+  <h3>{{ blogpost.title }}</h3>
+  {% endif %}
+
+  {{ blogpost.textPost }}<br/><br/>
+  {% if blogpost.imagePost %}
+  <img src="{{ blogpost.imagePost.url }}" width="300" height="200">
+  <br/>
+  {% endif %}<hr>
+  {{ blogpost.author }} - <small>{{ blogpost.date }}</small>
+  <br/><br/><br/><br/>
+  {% endfor %}
+</ul>
+
+
+{% endblock %}

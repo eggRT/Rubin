@@ -14,6 +14,7 @@ from pathlib import Path, os
 import django_heroku
 import dj_database_url
 from decouple import config
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +29,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'i#dpuihmo!9d*k!^u@4(%nipvc4*q=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['stormy-thicket-61810.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['jaktak.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
@@ -129,6 +130,10 @@ MEDIA_URL = '/media/'
 STATICFILES_STORAGE= 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    )
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'

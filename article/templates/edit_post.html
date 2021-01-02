@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+{% if user.id == post.author.id %}
+<h1>Edit post</h1>
+
+<div class="form-group">
+<form method="POST" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.media }}
+	{{ form.as_p }}
+	<button class="btn btn-outline-secondary">Edited</button>
+</div>
+{% else %}
+<h3>This page is not available</h3>
+{% endif %}
+{% else %}
+<h3>You are not authenticated</h3>
+{% endif %}
+{% endblock %}

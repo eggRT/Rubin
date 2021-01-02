@@ -6,6 +6,7 @@ Create
 
 {% block content %}
 {% if user.is_authenticated %}
+{% if user.profile.id %}
 <h1>Create post</h1>
 
 <div class="form-group">
@@ -20,8 +21,11 @@ Create
 		var name = "{{ user.id }}"
 		document.getElementById("nikc").value = name;
 	</script>
+{% else %}
+<h3>Need to create a profile</h3>
+<a href="{% url 'creationpr' %}" class="btn btn-outline-secondary">Create Profile</a>
 
-
+{% endif %}
 {% else %}
 <h3>You are not authenticated</h3>
 {% endif %}

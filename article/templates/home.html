@@ -2,16 +2,41 @@
 
 {% block content %}
 <h1>Posts</h1>
-<ul>
+
 	{% for post in object_list %}
-	<h3>{{ post.title }}</h3>
-	{{ post.textPost }}<br/>
-	{% if post.imagePost %}
-	<img src="{{ post.imagePost.url }}" width="300" height="200">
-	<br/>
-	{% endif %}<hr>
-	{{ post.author }} - <small>{{ post.date }}</small>
-	<br/><br/><br/><br/>
+	<div class="d-flex bd-highlight">
+	{% if post.author.profile.profilePic %}
+	<a href="{% url 'profile_page' post.author.profile.id post.author.id %}"><img src="{{ post.author.profile.profilePic.url }}" class="rounded-circle" width="30" height="30"></a>&nbsp&nbsp
+	{% endif %}
+	<a href="{% url 'detailArticle' post.pk %}">
+	<div class="bd-highlight">
+	
+	<a href="{% url 'detailArticle' post.pk %}", class="text-dark text-decoration-none"><h3>{{ post.title }}</h3></a>
+	</div>	
+	</div>
+			<a href="{% url 'detailArticle' post.pk %}", class="text-dark text-decoration-none">{{ post.textPost }}</a><br/><br/>
+
+			{% if post.imagePost %}
+			<a href="{% url 'detailArticle' post.pk %}"><img src="{{ post.imagePost.url }}" width="300" height="200"></a>
+			<br/>
+			</a>
+			{% endif %}<hr>
+			{% if user.id == post.author.id %}
+			{% if post.author.profile.id %}
+			<div class="d-flex bd-highlight">
+			<div class="p-2 flex-grow-1 bd-highlight">
+			<a href="{% url 'profile_page' post.author.profile.id post.author.id %}", class="text-secondary text-decoration-none">{{ post.author }}</a> - <small>{{ post.date }}</small></div>
+			<a href="{% url 'editPost' post.pk %}", class="p-2 bd-highlight text-dark text-decoration-none" >Edit</a>
+			</div>
+			{% endif %}
+			{% else %}
+			<a href="{% url 'profile_page' post.author.profile.id post.author.id %}", class="text-secondary text-decoration-none">{{ post.author }}</a> - <small>{{ post.date }}</small>
+			{% endif %}
+			<br/>
+
+			<br/><br/><br/><br/>
+	
 	{% endfor %}
-</ul>
+
+	
 {% endblock %}
