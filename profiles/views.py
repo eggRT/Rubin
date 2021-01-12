@@ -34,7 +34,7 @@ class ShowProfilePage(DetailView):
 		context = super(ShowProfilePage, self).get_context_data(*args, **kwargs)
 
 		page_user = get_object_or_404(Profile, id=self.kwargs['pk'])
-		postik =  Post.objects.filter(author_id= self.kwargs['authorid'])
+		postik =  Post.objects.filter(author_id= self.kwargs['authorid']).order_by('-date')
 
 		context = {
 			'page_user': page_user,

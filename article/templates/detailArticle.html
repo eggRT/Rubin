@@ -1,41 +1,82 @@
-{% extends 'base.html ' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}
 {{ post.title }}
 {% endblock %}
 {% block content %}
-<h1>{{ post.title }}</h1>
-<br/>
-<h5>{{ post.textPost }}</h5>
-<br/>
-{% if post.imagePost %}
-<img src="{{ post.imagePost.url }}">
-{% endif %}
-<hr>
-<small>	By: {{ post.author}} <br/>
-		Date: {{ post.date }}	<br/>
-</small>
+	
+	<div class="d-flex bd-highlight">
+	{% if post.author.profile.profilePic %}
+	<a href="{% url 'profile_page' post.author.profile.id post.author.id %}"><img src="{{ post.author.profile.profilePic.url }}" class="rounded-circle" width="30" height="30"></a>&nbsp&nbsp
+	{% endif %}
+	<div class="bd-highlight">
+	<a href="{% url 'profile_page' post.author.profile.id post.author.id %}", class="text-secondary text-decoration-none"><h5>{{ post.author }}</h5></a>
+	</div>	
+	</div>
+
+<h5>{{ post.textPost|linebreaks|urlize }}</h5>
 <br/>
 
-<h5>Comments</h5>
-{% if not comments %}
-...
-{% else %}
-{% for comment in comments %}
-{% if comment.user.profile.id %}
-<strong>
-  <img src="{{ comment.user.profile.profilePic.url }}" class="rounded-circle" width = "35" height="35">
-  &nbsp<a href="{% url 'profile_page' comment.user.profile.id comment.user.id %}", class="text-secondary text-decoration-none">{{ comment.user }}</a>&nbsp
-  <small class="fw-lighter">{{ comment.datepublished }}</small>
-  {% endif %}
-</strong>
-<br/>
-<h5>{{ comment.content }}</h5>
-<br/>
+{% for ph in photos %}
+<img src="{{ ph.image.url }}" width="365" height="250"></br></br>
 {% endfor %}
+
+
+<hr>
+<small>	
+Date: {{ post.date }} &nbsp<br/>
+Tags: 
+{% for tag in post.tags.all %}
+{% if tag.slug %}
+<a href="{{ tag.get_absolute_url }}">
 {% endif%}
+~{{ tag.title }}&nbsp</a>
+{% endfor %}
 <br/>
+</small>
+
+<div class="d-flex bd-highlight">
+<div class="p-2 bd-highlight">
+<form action="{% url 'like_post' post.pk %}" method="POST">
+	{% csrf_token %}
+
+	{% if user.is_authenticated %}
+	{% if liked %}
+	<button type="submit", name="post_id", value="{{ post.id }}"><img src="{% static 'images/thumbup.png' %}" width="25" height="25"></button> - 
+	{% else %}
+	<button type="submit", name="post_id", value="{{ post.id }}"><img src="{% static 'images/thumbup.png' %}" width="25" height="25"></button> - 
+	{% endif %}
+	{% else %}
+	<img src="{% static 'images/thumbup.png' %}" width="25" height="25"> -
+	{% endif %}
+
+	{{ post.total_likes}} Likes
+</form>
+</div>
+
+<div class="p-2 bd-highlight">
+<form action="{% url 'dislike_post' post.pk %}" method="POST">
+	{% csrf_token %}
+
+	{% if user.is_authenticated %}
+	{% if disliked %}
+	<button type="submit", name="post_id", value="{{ post.id }}"><img src="{% static 'images/dislike.png' %}" width="25" height="25"></button> - 
+	{% else %}
+	<button type="submit", name="post_id", value="{{ post.id }}"><img src="{% static 'images/dislike.png' %}" width="25" height="25"></button> - 
+	{% endif %}
+	{% else %}
+	<img src="{% static 'images/dislike.png' %}" width="25" height="25"> -
+	{% endif %}
+
+	{{ post.total_dislikes }} Dislikes
+</form>
+</div>
+</div>
+
+<br/><br/><br/>
+
+<h5>Comments</h5>
 {% if user.is_authenticated %}
 {% if user.profile.id %}
 <form method="POST">
@@ -43,8 +84,35 @@
 	{{ comment_form.as_p }}
 	<input type="submit" name="Submit" class="btn btn-outline-secondary">
 </form>
+
+{% else %}
+<a href="{% url 'creationpr' %}", class="text-secondary text-decoration-none"><small>Create a profile to write comments</small></a>
 {% endif %}
+{% else %}
 {% endif %}
+<br/>
+
+{% if not comments %}
+...
+{% else %}
+{% for comment in comments %}
+{% if comment.user.profile.id %}
+<strong>
+	<a href="{% url 'profile_page' comment.user.profile.id comment.user.id %}", class="text-secondary text-decoration-none">
+	<img src="{{ comment.user.profile.profilePic.url }}" class="rounded-circle " width = "30" height="30">
+  	{{ comment.user }}</a>&nbsp
+  	{% if comment.user.id == user.id %}
+	<a href="{% url 'editComment' comment.pk %}" class="fw-lighter text-secondary text-decoration-none">Edit</a>
+	{% endif %}
+  {% endif %}
+</strong>
+<br/>
+<h5>{{ comment.content }}</h5>
+<br/>
+{% endfor %}
+{% endif%}
+
+
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 

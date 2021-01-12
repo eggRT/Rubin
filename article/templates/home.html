@@ -1,42 +1,67 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+
 <h1>Posts</h1>
 
+<div class="row infinite-container">
 	{% for post in object_list %}
-	<div class="d-flex bd-highlight">
+	<div class="infinite-item">
+	<div class="col-md-12 d-flex bd-highlight">
 	{% if post.author.profile.profilePic %}
 	<a href="{% url 'profile_page' post.author.profile.id post.author.id %}"><img src="{{ post.author.profile.profilePic.url }}" class="rounded-circle" width="30" height="30"></a>&nbsp&nbsp
 	{% endif %}
 	<a href="{% url 'detailArticle' post.pk %}">
 	<div class="bd-highlight">
 	
-	<a href="{% url 'detailArticle' post.pk %}", class="text-dark text-decoration-none"><h3>{{ post.title }}</h3></a>
+	<a href="{% url 'profile_page' post.author.profile.id post.author.id %}", class="text-secondary text-decoration-none"><h5>{{ post.author }}</h5></a>
 	</div>	
 	</div>
-			<a href="{% url 'detailArticle' post.pk %}", class="text-dark text-decoration-none">{{ post.textPost }}</a><br/><br/>
+			<a href="{% url 'detailArticle' post.pk %}", class="text-dark text-decoration-none"><h6>{{ post.textPost|linebreaks }}</h6></a>
 
 			{% if post.imagePost %}
 			<a href="{% url 'detailArticle' post.pk %}"><img src="{{ post.imagePost.url }}" width="300" height="200"></a>
 			<br/>
 			</a>
-			{% endif %}<hr>
-			{% if user.id == post.author.id %}
-			{% if post.author.profile.id %}
-			<div class="d-flex bd-highlight">
-			<div class="p-2 flex-grow-1 bd-highlight">
-			<a href="{% url 'profile_page' post.author.profile.id post.author.id %}", class="text-secondary text-decoration-none">{{ post.author }}</a> - <small>{{ post.date }}</small></div>
-			<a href="{% url 'editPost' post.pk %}", class="p-2 bd-highlight text-dark text-decoration-none" >Edit</a>
-			</div>
 			{% endif %}
-			{% else %}
-			<a href="{% url 'profile_page' post.author.profile.id post.author.id %}", class="text-secondary text-decoration-none">{{ post.author }}</a> - <small>{{ post.date }}</small>
-			{% endif %}
-			<br/>
+			<hr>
 
+			<a href="{% url 'detailArticle' post.pk %}", class="text-dark text-decoration-none">
+			<img src="{% static 'images/thumbup.png' %}" width="18" height="18"> {{ post.total_likes}} &nbsp
+			<img src="{% static 'images/dislike.png' %}" width="18" height="18"> {{ post.total_dislikes}}
+			&nbsp&nbsp&nbsp <small>{{ post.datepublished }}</small></a>
 			<br/><br/><br/><br/>
-	
+	</div>
 	{% endfor %}
+</div>
 
-	
+	<div class="row">
+		<div class="col-12">
+			{% if object_list.has_next %}
+			<a class="infinite-more-link" href="?page={{ object_list.next_page_number }}">next</a>
+			{% endif %}
+			</span>
+		</div>
+	</div>
+
+
+	<script src="{% static 'js/jquery.waypoints.min.js'%}"></script>
+	<script src="{% static 'js/infinite.min.js' %}"></script>
+	<script>
+		var infinite = new Waypoint.Infinite({
+			element: $('.infinite-container')[0],
+
+			offset: 'bottom-in-view',
+
+			onBeforePageLoad: function () {
+
+			},
+
+			onAfterPageLoad: function() {
+
+			}
+		});
+	</script>
+
 {% endblock %}

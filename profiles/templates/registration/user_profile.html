@@ -11,9 +11,9 @@
     <div class="col-md-4">
 
 	{% if page_user.profilePic %}
-      <img src="{{ page_user.profilePic.url }}" width="100" height="130">
+      <img src="{{ page_user.profilePic.url }}" width="145" height="170">
   	{% else %}
-  		<img src="{% static 'testBlog/images/default_user_img.png' %}" width="100" height="100">
+  		<img src="{% static 'testBlog/images/default_user_img.png' %}" width="150" height="150">
 	{% endif %}
 
     </div>
@@ -21,17 +21,15 @@
       <div class="card-body">
         <h5 class="card-title">{{ page_user.user }}</h5>
 
-        <p class="card-text">{{ page_user.descript }}</p>
-
         {% if page_user.link %}
         <p class="small text-muted">
-          <a href="{{ page_user.link }}">link</a>
+          <a href="{{ page_user.link }}", class="text-secondary text-decoration-none">link</a>
         </p>
         {% endif %}
         
         {% if user.is_authenticated %}
         {% if user.id == page_user.user.id %}
-        <a href="{% url 'editpr' user.profile.id %}">Edit</a>
+        <a href="{% url 'editpr' user.profile.id %}", class="text-dark text-decoration-none">Edit</a>
         {% endif %}
         {% endif %}
       </div>
@@ -39,32 +37,43 @@
   </div>
 </div>
 
-<br/><br/><br/><br/>
+<br/>
+<h5>Info</h5>
+<p>&nbsp {{ page_user.descript }}</p>
+<br/><br/><br/>
 <h1>Posts</h1>
 <br/>
 <ul>
+  
+
   {% for blogpost in postik %}
+
+  <div class="d-flex bd-highlight">
+  {% if blogpost.author.profile.profilePic %}
+  <a href="{% url 'profile_page' blogpost.author.profile.id blogpost.author.id %}"><img src="{{ blogpost.author.profile.profilePic.url }}" class="rounded-circle" width="30" height="30"></a>&nbsp&nbsp
+  {% endif %}
+  <a href="{% url 'detailArticle' blogpost.pk %}">
+  <div class="bd-highlight">
+  
+  <a href="{% url 'profile_page' blogpost.author.profile.id blogpost.author.id %}", class="text-secondary text-decoration-none"><h5>{{ blogpost.author }}</h5></a>
+  </div>  
+  </div>
+  
+  <a href="{% url 'detailArticle' blogpost.pk %}", class="text-dark text-decoration-none">{{ blogpost.textPost }}<br/><br/>
+  {% if blogpost.imagePost %}
+  <img src="{{ blogpost.imagePost.url }}" width="300" height="200"></a>
+  {% endif %}
+  <br/>
+  <hr>
+  <small>{{ blogpost.date }}</small>&nbsp&nbsp&nbsp
   {% if user.is_authenticated %}
   {% if user.id == blogpost.author.id %}
-  <div class="d-flex bd-highlight">
-  <h3 class="flex-grow-1">{{ blogpost.title }}</h3>
-  <a href="{% url 'editPost' blogpost.pk %}", class="p-2 bd-highlight text-dark text-decoration-none" >Edit</a>
-  </div> 
-  {% else %}
-  <h3>{{ blogpost.title }}</h3>
+  <a href="{% url 'deletePost' blogpost.pk %}", class="text-dark text-decoration-none" ><small>Delete</small></a>
   {% endif %}
-  {% else %}
-  <h3>{{ blogpost.title }}</h3>
   {% endif %}
-
-  {{ blogpost.textPost }}<br/><br/>
-  {% if blogpost.imagePost %}
-  <img src="{{ blogpost.imagePost.url }}" width="300" height="200">
-  <br/>
-  {% endif %}<hr>
-  {{ blogpost.author }} - <small>{{ blogpost.date }}</small>
   <br/><br/><br/><br/>
   {% endfor %}
+
 </ul>
 
 

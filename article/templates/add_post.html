@@ -9,18 +9,72 @@ Create
 {% if user.profile.id %}
 <h1>Create post</h1>
 
-<div class="form-group">
-<form method="POST" enctype="multipart/form-data">
-	{% csrf_token %}
-	{{ form.media }}
-	{{ form.as_p }}
-	<button class="btn btn-outline-secondary">Published</button>
-</div>
+<label>Text</label>
+<textarea id="description" class="form-control"></textarea><br/>
+<label>Tags (for separating tags, use symbol( , ))</label>
+<input type="text" id="tags" class="form-control"><br/>
+<input type="file" multiple>
+<label>Info:<br/>1)First image will be displayed on the homepage<br/>2)All others, on the detail page</br>3)picture resolution 365x250</label><br/><br/>
+<button type="button" id="saveBtn" class="btn btn-outline-secondary">Published</button>
+
 	
 	<script>
-		var name = "{{ user.id }}"
-		document.getElementById("nikc").value = name;
-	</script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var files = []
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);
+        FilePond.registerPlugin(FilePondPluginFileValidateType);
+        FilePond.setOptions({
+            allowMultiple:true,
+            maxFiles:4,
+            maxFileSize: '3MB'
+        })
+        const inputElement = document.querySelector('input[type="file"]');
+        const pond = FilePond.create( inputElement, {
+            acceptedFileTypes:['image/png', 'image/jpeg'],
+            onaddfile: (err, fileItem) => {
+                if (!err) {
+                files.push(fileItem.file)
+                }
+                console.log(files)
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file)
+                if (index > -1) {
+                    files.splice(index, 1)
+                }
+                console.log(files)
+            }
+        } );
+
+        var formData = new FormData();
+        $(document).on('click', '#saveBtn', function(e) {
+            formData.append('length', files.length)
+            formData.append('description', $('#description').val())
+            formData.append('tags', $('#tags').val())
+            for (var i = 0; i < files.length; i++) {
+                formData.append('images' + i, files[i])
+            }
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url "createPost" %}',
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                success: function (){
+                    window.location.replace('{% url "home" %}')
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(xhr.status + ":" + xhr.responseText)
+                }
+            })
+        })
+    })
+</script>
+
 {% else %}
 <h3>Need to create a profile</h3>
 <a href="{% url 'creationpr' %}" class="btn btn-outline-secondary">Create Profile</a>

@@ -6,7 +6,7 @@ Edit
 
 {% block content %}
 {% if user.is_authenticated %}
-{% if user.id == post.author.id %}
+
 <h1>Edit post</h1>
 
 <div class="form-group">
@@ -15,10 +15,9 @@ Edit
 	{{ form.media }}
 	{{ form.as_p }}
 	<button class="btn btn-outline-secondary">Edited</button>
+	<a href="{% url 'deletePost' post.pk %}" class="btn btn-outline-secondary">Delete</a>
 </div>
-{% else %}
-<h3>This page is not available</h3>
-{% endif %}
+
 {% else %}
 <h3>You are not authenticated</h3>
 {% endif %}
